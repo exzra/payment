@@ -52,3 +52,13 @@ __________________
     and private final field storage to prevent access to storage and changes from other places except this class
     * according to the fact that jetty does not share threads ( what exactly do some reactive frameworks )
      between processes we can use just synchronized blocks - for simplicity
+     
+_________________
+
+# Tests
+
+* PaymentControllerTest contains something like integration tests
+    * Tests create/read/update operations
+    * Tests single transfer request
+    * Tests multiple threads requests for transfer
+* PaymentServiceTest contains failure scenarios because happy paths were tested in controller

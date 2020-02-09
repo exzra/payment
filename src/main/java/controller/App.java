@@ -1,5 +1,6 @@
 package controller;
 
+import Utils.JsonTransformer;
 import service.PaymentService;
 import service.PaymentServiceImpl;
 
@@ -32,9 +33,9 @@ public class App {
     }
 
     private static void establishRoutes() {
-        get(PATH+ "/:id", PaymentController.get);
-        post(PATH, PaymentController.post);
-        put(PATH, PaymentController.put);
-        post(TRANSFER_PATH, PaymentController.postForTransfer);
+        get(PATH+ "/:id", PaymentController.get, new JsonTransformer());
+        post(PATH, PaymentController.post, new JsonTransformer());
+        put(PATH, PaymentController.put, new JsonTransformer());
+        post(TRANSFER_PATH, PaymentController.postForTransfer, new JsonTransformer());
     }
 }

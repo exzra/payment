@@ -32,6 +32,9 @@ public final class PaymentServiceImpl implements PaymentService {
 
     @Override
     public String transfer(TransferDTO transfer) {
+        if (transfer.getValue() < 0) {
+            throw new RuntimeException();
+        }
         synchronized (storage) {
             Account sender = storage.get(transfer.getSenderID());
             Account receiver = storage.get(transfer.getReceiverID());
@@ -52,12 +55,18 @@ public final class PaymentServiceImpl implements PaymentService {
     @Override
     public Account createAccount(Account account) {
         Account newAccount = new Account(UUID.randomUUID(), account.getValue());
+        if (account.getValue() < 0) {
+            throw new RuntimeException("Invalid cash value");
+        }
         storage.put(newAccount.getId(), newAccount);
         return newAccount;
     }
 
     @Override
     public Account getAccount(UUID accountId) {
+        if (accountId == null) {
+            throw new RuntimeException("Invalid uuid");
+        }
         synchronized (storage) {
             return storage.get(accountId);
         }

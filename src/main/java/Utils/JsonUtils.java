@@ -1,7 +1,6 @@
-package JsonUtils;
+package Utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.Account;
 
 import java.io.IOException;
 

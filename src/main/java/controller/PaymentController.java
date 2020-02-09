@@ -7,7 +7,7 @@ import spark.Route;
 
 import java.util.UUID;
 
-import static JsonUtils.JsonUtils.jsonToData;
+import static Utils.JsonUtils.jsonToData;
 import static controller.App.paymentService;
 
 public class PaymentController {
