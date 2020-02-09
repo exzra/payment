@@ -52,6 +52,7 @@ __________________
     and private final field storage to prevent access to storage and changes from other places except this class
     * according to the fact that jetty does not share threads ( what exactly do some reactive frameworks )
      between processes we can use just synchronized blocks - for simplicity
+* Notice that get account can return incorrect value ( as most of the banking systems do )
      
 _________________
 

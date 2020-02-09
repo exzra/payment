@@ -67,8 +67,6 @@ public final class PaymentServiceImpl implements PaymentService {
         if (accountId == null) {
             throw new RuntimeException("Invalid uuid");
         }
-        synchronized (storage) {
-            return storage.get(accountId);
-        }
+        return storage.get(accountId);
     }
 }
