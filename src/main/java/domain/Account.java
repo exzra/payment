@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.util.UUID;
 
-//@JsonTypeName("echo")
 @AllArgsConstructor
 @Data
 public class Account {
