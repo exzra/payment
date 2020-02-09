@@ -46,7 +46,7 @@ __________________
 # Implementation details
 
 * Spark Java for REST 
-* No DI frameworks to do thinner JAR
+* No DI frameworks to do more thin JAR
 * Storage implementation: HashMap with synchronized blocks
     * final Service class
     and private final field storage to prevent access to storage and changes from other places except this class
