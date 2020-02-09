@@ -12,7 +12,8 @@ import static spark.Spark.*;
 import static spark.route.HttpMethod.put;
 
 public class App {
-    //private static final Logger LOG = Logger.getLogger(App.class);
+
+    private static final String PATH = "/payment";
 
     public static PaymentService paymentService;
 
@@ -20,25 +21,18 @@ public class App {
         paymentService = new PaymentServiceImpl();
     }
 
-    Map<UUID, Long> accounts = new HashMap<>();
-
     public static void main(String[] args) {
         port(8080);
         start();
     }
 
     public static void start() {
-//        JsonUtils.registerModules();
-
-       // LOG.info("Initializing routes");
         establishRoutes();
     }
 
     private static void establishRoutes() {
-        get("/payment", (req, res) -> "Hello");
-
-        post("/payment", (req, res) -> req.attribute("id"));
-
-        put("/payment", (req, res) -> req.attributes());
+        get(PATH+ "/:id", PaymentController.get);
+        post(PATH, PaymentController.post);
+        put(PATH, PaymentController.put);
     }
 }

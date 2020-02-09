@@ -1,9 +1,14 @@
 package service;
 
+import domain.Account;
+import domain.PaymentDTO;
+
 import java.util.UUID;
 
 public interface PaymentService {
-    void updateAccount(UUID accountId, Long paymentValue);
+    Account updateAccount(PaymentDTO payment);
 
-    UUID createAccount(Long initialValue);
+    Account createAccount(Account account);
+
+    Account getAccount(UUID accountId);
 }
