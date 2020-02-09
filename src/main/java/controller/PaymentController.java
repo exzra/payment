@@ -2,6 +2,7 @@ package controller;
 
 import domain.Account;
 import domain.PaymentDTO;
+import domain.TransferDTO;
 import spark.Route;
 
 import java.util.UUID;
@@ -19,4 +20,7 @@ public class PaymentController {
 
     public static Route post = (req, res) ->
             paymentService.createAccount(jsonToData(req.body(), Account.class));
+
+    public static Route postForTransfer = (req, res) ->
+            paymentService.transfer(jsonToData(req.body(), TransferDTO.class));
 }

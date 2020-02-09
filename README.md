@@ -6,23 +6,49 @@ ___________
 
 Design and implement a RESTful API (including data model and the backing implementation) for
 money transfers between accounts.
-Explicit requirements:
-1. You can use Java or Kotlin.
-2. Keep it simple and to the point (e.g. no need to implement any authentication).
-3. Assume the API is invoked by multiple systems and services on behalf of end users.
-4. You can use frameworks/libraries if you like (except Spring), but don't forget about
-requirement #2 and keep it simple and avoid heavy frameworks.
-5. The datastore should run in-memory for the sake of this test.
-6. The final result should be executable as a standalone program (should not require a
-pre-installed container/server).
-7. Demonstrate with tests that the API works as expected.
-Implicit requirements:
-1. The code produced by you is expected to be of high quality.
-2. There are no detailed requirements, use common sense.
 
+___________
 
+# API description
+
+## get account
+    curl --request GET \
+      --url http://localhost:8080/payment/{UUID}
+  
+## create account
+    curl --request POST \
+      --url http://localhost:8080/payment \
+      --header 'content-type: application/json' \
+      --data '{
+        "value": {initial long value}
+    }'
+
+## update account ()
+    curl --request PUT \
+      --url http://localhost:8080/payment \
+      --header 'content-type: application/json' \
+      --data '{
+        "id": {UUID},
+        "diff": {exchange value (negative or positive)}
+    }'
+
+## transfer money
+    curl --request POST \
+      --url http://localhost:8080/transfer \
+      --header 'content-type: application/json' \
+      --data '{
+        "senderID": {UUID},
+        "receiverID": {UUID},
+        "value": {long value}
+    }'
 __________________
 
 # Implementation details
 
-Spark Java for REST 
+* Spark Java for REST 
+* No DI frameworks to do thinner JAR
+* Storage implementation: HashMap with synchronized blocks
+    * final Service class
+    and private final field storage to prevent access to storage and changes from other places except this class
+    * according to the fact that jetty does not share threads ( what exactly do some reactive frameworks )
+     between processes we can use just synchronized blocks - for simplicity
