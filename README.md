@@ -47,11 +47,10 @@ __________________
 
 * Spark Java for REST 
 * No DI frameworks to do more thin JAR
-* Storage implementation: HashMap with synchronized blocks
+* Storage implementation: ConcurrentHashMap and locks on Account entity
     * final Service class
     and private final field storage to prevent access to storage and changes from other places except this class
-    * according to the fact that jetty does not share threads ( what exactly do some reactive frameworks )
-     between processes we can use just synchronized blocks - for simplicity
+    * locks for an account for the whole methods update and transfer - to avoid getting and operating with an old value
 * Notice that get account can return incorrect value ( as most of the banking systems do )
      
 _________________
@@ -62,4 +61,5 @@ _________________
     * Tests create/read/update operations
     * Tests single transfer request
     * Tests multiple threads requests for transfer
+    * Tests multiple threads requests for transfer and update 
 * PaymentServiceTest contains failure scenarios because happy paths were tested in controller
