@@ -74,11 +74,20 @@ public class PaymentControllerTest {
         Account account2 = get("/payment/" + id2);
         assertEquals(800L, account1.getValue());
         assertEquals(200L, account2.getValue());
+
+        transfer.setSenderID(id2);
+        transfer.setReceiverID(id1);
+        postForTransfer("/transfer", transfer);
+
+        account1 = get("/payment/" + id1);
+        account2 = get("/payment/" + id2);
+        assertEquals(1000L, account1.getValue());
+        assertEquals(0L, account2.getValue());
     }
 
     @Test
     public void simpleSyncTest() throws HttpClientException, InterruptedException {
-        ExecutorService pool = Executors.newFixedThreadPool(100);
+        ExecutorService pool = Executors.newFixedThreadPool(50);
 
         for (int i = 0; i < 1000; i++) {
             pool.submit(new Runnable() {
@@ -89,6 +98,7 @@ public class PaymentControllerTest {
                         PostMethod resp = testServer.post("/transfer", dataToJson(transfer), false);
                         testServer.execute(resp);
                     } catch (Exception ex) {
+                        ex.printStackTrace();
                         System.out.println("failed execution");
                     }
                 }
@@ -101,6 +111,56 @@ public class PaymentControllerTest {
         Account account2 = get("/payment/" + id2);
         assertEquals(0L, account1.getValue());
         assertEquals(1000L, account2.getValue());
+    }
+
+    @Test
+    public void simpleSyncTest2() throws HttpClientException, InterruptedException {
+        ExecutorService pool = Executors.newFixedThreadPool(50);
+
+        for (int i = 0; i < 800; i++) {
+            pool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        TransferDTO transfer = new TransferDTO(id1, id2, 1L);
+                        PostMethod resp = testServer.post("/transfer", dataToJson(transfer), false);
+                        testServer.execute(resp);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        System.out.println("failed execution");
+                    }
+                }
+            });
+        }
+
+        ExecutorService pool2 = Executors.newFixedThreadPool(10);
+
+        for (int i = 0; i < 200; i++) {
+            pool2.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        PaymentDTO paymentDTO = new PaymentDTO(id1, -1);
+                        PutMethod resp = testServer.put("/payment", dataToJson(paymentDTO), false);
+
+                        testServer.execute(resp);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        System.out.println("failed execution");
+                    }
+                }
+            });
+        }
+
+        pool.shutdown();
+        pool.awaitTermination(10, TimeUnit.SECONDS);
+        pool2.shutdown();
+        pool2.awaitTermination(10, TimeUnit.SECONDS);
+
+        Account account1 = get("/payment/" + id1);
+        Account account2 = get("/payment/" + id2);
+        assertEquals(0L, account1.getValue());
+        assertEquals(800L, account2.getValue());
     }
 
     private Account get(String params) throws HttpClientException {
